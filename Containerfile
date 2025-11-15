@@ -1,11 +1,13 @@
-FROM quay.io/fedora/fedora-bootc:latest
+FROM quay.io/centos-bootc/centos-bootc:stream10
 
 RUN rm -rf /usr/local && \
 	ln -sf /var/usrlocal /usr/local
 
-RUN dnf -y install 'dnf5-command(config-manager)' && \
-	dnf config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo && \
-	dnf -y group install virtualization && \
+RUN dnf -y install 'dnf-command(config-manager)' && \
+	dnf -y config-manager --add-repo https://pkgs.tailscale.com/stable/centos/10/tailscale.repo && \
+	dnf -y config-manager --set-enabled crb && \
+	dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm && \
+	if [ "$TARGETPLATFORM" = "linux/amd64" ]; then dnf -y group install "Virtualization Host"; fi && \
 	dnf -y install \
 	cockpit cockpit-ws cockpit-podman cockpit-selinux cockpit-machines \
 	git neovim tree tmux rsync tailscale && \
