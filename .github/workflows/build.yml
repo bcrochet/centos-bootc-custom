@@ -161,10 +161,10 @@ jobs:
       - name: Verify the image signature
         run: |
           cosign verify \
-            --key "https://github.com/${{ github.repository }}/cosign.pub@refs/heads/main" \
+            --key "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/refs/heads/main/cosign.pub" \
             "${IMAGE_REGISTRY}/${INPUT_NAME}@${DIGEST}"
         env:
           INPUT_NAME: ${{ env.IMAGE_NAME }}
           DIGEST: ${{ steps.push-manifest.outputs.digest }}
           IMAGE_REGISTRY: ${{ env.IMAGE_REGISTRY }}
-
+          GITHUB_REPOSITORY: ${{ github.repository }}
