@@ -143,14 +143,18 @@ jobs:
       # Sign container
       - name: Install cosign
         if: github.event_name != 'pull_request'
-        uses: sigstore/cosign-installer@v3.10.0
-        with:
-          cosign-release: 'v2.2.4'
+        uses: sigstore/cosign-installer@v4.0.0
 
       - name: Sign the published manifest
         if: github.event_name != 'pull_request'
         run: |
-          cosign sign --yes --key env://COSIGN_PRIVATE_KEY --recursive "${IMAGE_REGISTRY}/${INPUT_NAME}@${DIGEST}"
+          cosign sign \
+            --yes \
+            --key env://COSIGN_PRIVATE_KEY \
+            --new-bundle-format=false \
+            --use-signing-config=false \
+            --registry-referrers-mode=legacy \
+            --recursive "${IMAGE_REGISTRY}/${INPUT_NAME}@${DIGEST}"
         env:
           DIGEST: ${{ steps.push-manifest.outputs.digest }}
           IMAGE_REGISTRY: ${{ env.IMAGE_REGISTRY }}
@@ -168,3 +172,4 @@ jobs:
           DIGEST: ${{ steps.push-manifest.outputs.digest }}
           IMAGE_REGISTRY: ${{ env.IMAGE_REGISTRY }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+
