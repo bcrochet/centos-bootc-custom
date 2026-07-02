@@ -11,7 +11,7 @@ RUN dnf -y install 'dnf-command(config-manager)' && \
 	if [ "$TARGETPLATFORM" = "linux/amd64" ]; then dnf -y group install "Virtualization Host"; fi && \
 	dnf -y install \
 	cockpit cockpit-ws cockpit-podman cockpit-selinux cockpit-machines \
-	git neovim tree tmux rsync tailscale man-db systemd-resolved openvswitch \
+	git neovim tree tmux rsync tailscale man-db systemd-resolved \
 	wireshark-cli haproxy keepalived usbutils nut nut-client \
 	neovim smartmontools smartmontools-selinux freeipa-client && \
 	dnf clean all && \
